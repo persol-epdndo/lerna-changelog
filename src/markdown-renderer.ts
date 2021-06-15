@@ -52,9 +52,10 @@ export default class MarkdownRenderer {
       }
     }
 
-    if (release.contributors) {
-      markdown += `\n\n${this.renderContributorList(release.contributors)}`;
-    }
+    // TODO: configから調整できるようにする
+    // if (release.contributors) {
+    //   markdown += `\n\n${this.renderContributorList(release.contributors)}`;
+    // }
 
     return markdown;
   }
