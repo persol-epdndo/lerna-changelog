@@ -1,5 +1,6 @@
 const pMap = require("p-map");
 
+import { lexer } from 'marked'
 import progressBar from "./progress-bar";
 import { Configuration } from "./configuration";
 import findPullRequestId from "./find-pull-request-id";
@@ -151,13 +152,14 @@ export default class Changelog {
 
   private async downloadIssueData(commitInfos: CommitInfo[]) {
     progressBar.init("Downloading issue information…", commitInfos.length);
+    commitInfos = commitInfos.filter(x => x.issueNumber === '1' || x.issueNumber === null)
     await pMap(
       commitInfos,
       async (commitInfo: CommitInfo) => {
         if (commitInfo.issueNumber) {
           commitInfo.githubIssue = await this.github.getIssueData(this.config.repo, commitInfo.issueNumber);
+          commitInfo.githubIssue.parsed_body = lexer(commitInfo.githubIssue.body)
         }
-
         progressBar.tick();
       },
       { concurrency: 5 }

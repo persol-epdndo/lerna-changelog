@@ -15,6 +15,11 @@ interface Options {
   unreleasedName: string;
 }
 
+interface SecurityTestTarget {
+  apis: string[];
+  urls: string[];
+}
+
 export default class MarkdownRenderer {
   private options: Options;
 
@@ -42,8 +47,14 @@ export default class MarkdownRenderer {
 
     let markdown = `## ${releaseTitle} (${release.date})`;
 
+    const securityTestTarget: SecurityTestTarget = { urls: [], apis: [] }
+   
     for (const category of categoriesWithCommits) {
       markdown += `\n\n#### ${category.name}\n`;
+
+      const target = this.getSecurityTestTarget(category.commits)
+      securityTestTarget.urls.push(...target.urls)
+      securityTestTarget.apis.push(...target.apis)
 
       // TODO: パッケージごとわけて記載するかをconfigから調整できるようにする
       // if (this.hasPackages(category.commits)) {
@@ -57,6 +68,10 @@ export default class MarkdownRenderer {
     // if (release.contributors) {
     //   markdown += `\n\n${this.renderContributorList(release.contributors)}`;
     // }
+
+    if (securityTestTarget.urls.length > 0 || securityTestTarget.apis.length > 0) {
+      markdown += `\n\n${this.renderSecurityTestTargetList(securityTestTarget)}`;
+    }
 
     return markdown;
   }
@@ -116,6 +131,22 @@ export default class MarkdownRenderer {
     }
   }
 
+  private renderSecurityTestTargetList(securityTestTarget: SecurityTestTarget) {
+    let markdown = "#### 脆弱診断対象\n\n"
+
+    if (securityTestTarget.urls.length > 0) {
+      const rows = securityTestTarget.urls.filter(onlyUnique).sort().map(x => `* ${x}\n`).join("")
+      markdown += `##### URL\n${rows}\n`
+    }
+
+    if (securityTestTarget.apis.length > 0) {
+      const rows = securityTestTarget.apis.filter(onlyUnique).sort().map(x => `* ${x}\n`).join("")
+      markdown += `##### API\n${rows}\n`
+    }
+
+    return markdown
+  }
+
   public renderContributorList(contributors: GitHubUserResponse[]) {
     const renderedContributors = contributors.map(contributor => `- ${this.renderContributor(contributor)}`).sort();
 
@@ -144,4 +175,38 @@ export default class MarkdownRenderer {
       return { name, commits };
     });
   }
+
+  private getSecurityTestTarget(commits: CommitInfo[]): SecurityTestTarget {
+    const TARGET_HEADER = '種別,診断対象'
+
+    return commits.reduce<SecurityTestTarget>((acc, commit) => {
+      const pared = commit.githubIssue?.parsed_body
+
+      // TODO: configから処理を挿入できるようにしたい
+      if (pared !== undefined) {
+        pared.forEach(x => {
+          if (x.type === 'table' && x.header.join() === TARGET_HEADER) {
+            x.cells.forEach(c => {
+              const name = c[1] ?? ''
+              const type = c[0] ?? ''
+              if (name.length > 0) {
+                if (type === 'URL') {
+                  acc.urls.push(name)
+                }
+                if (['Mutation', 'Query', 'Subscription'].includes(type)) {
+                  acc.apis.push(`(${type}) ${name}`)
+                }
+              }
+            })
+          }
+        })
+      }
+      return acc
+    }, { apis: [], urls: []})
+  }
+
+}
+
+function onlyUnique(value: any, index: number, self: any[]): boolean {
+  return self.indexOf(value) === index;
 }
