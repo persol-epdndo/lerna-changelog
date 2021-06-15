@@ -45,11 +45,12 @@ export default class MarkdownRenderer {
     for (const category of categoriesWithCommits) {
       markdown += `\n\n#### ${category.name}\n`;
 
-      if (this.hasPackages(category.commits)) {
-        markdown += this.renderContributionsByPackage(category.commits);
-      } else {
-        markdown += this.renderContributionList(category.commits);
-      }
+      // TODO: パッケージごとわけて記載するかをconfigから調整できるようにする
+      // if (this.hasPackages(category.commits)) {
+      //   markdown += this.renderContributionsByPackage(category.commits);
+      // } else {
+      markdown += this.renderContributionList(category.commits);
+      // }
     }
 
     // TODO: configから調整できるようにする
