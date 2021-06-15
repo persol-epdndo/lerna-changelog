@@ -1,5 +1,6 @@
 const path = require("path");
 
+import { TokensList } from 'marked'
 import ConfigurationError from "./configuration-error";
 import fetch from "./fetch";
 
@@ -12,6 +13,8 @@ export interface GitHubUserResponse {
 export interface GitHubIssueResponse {
   number: number;
   title: string;
+  body: string;
+  parsed_body: TokensList;
   pull_request?: {
     html_url: string;
   };
