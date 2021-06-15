@@ -62,7 +62,7 @@
     "node": "10.* || >= 12"
   },
   "changelog": {
-    "repo": "lerna/lerna-changelog",
+    "repo": "persol-epdndo/lerna-changelog",
     "labels": {
       "breaking": ":boom: Breaking Change",
       "enhancement": ":rocket: Enhancement",
