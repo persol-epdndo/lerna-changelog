@@ -32,7 +32,7 @@ export default class MarkdownRenderer {
       .map(release => this.renderRelease(release))
       .filter(Boolean)
       .join("\n\n\n");
-    return output ? `\n${output}` : "";
+    return output ? `${output}\n\n` : "";
   }
 
   public renderRelease(release: Release): string | undefined {
@@ -144,7 +144,7 @@ export default class MarkdownRenderer {
       markdown += `##### API\n${rows}\n`
     }
 
-    return markdown
+    return markdown.trim()
   }
 
   public renderContributorList(contributors: GitHubUserResponse[]) {

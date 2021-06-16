@@ -154,7 +154,7 @@ export default class Changelog {
     progressBar.init("Downloading issue information…", commitInfos.length);
     // NOTE: persol-epdndo/lerna-changelogでテストをする際は必要。
     // forkするとコミットとPRの紐付けがおかしくなってしまうために、そのままだとPRのデータを取得するところでNotFoundエラーが発生する。
-    // commitInfos = commitInfos.filter(x => x.issueNumber === '1' || x.issueNumber === '3' || x.issueNumber === null);
+    // commitInfos = commitInfos.filter(x => x.issueNumber === null || ['1', '3', '4'].includes(x.issueNumber));
     await pMap(
       commitInfos,
       async (commitInfo: CommitInfo) => {
