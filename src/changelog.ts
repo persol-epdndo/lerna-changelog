@@ -170,33 +170,42 @@ export default class Changelog {
   }
 
   private groupByRelease(commits: CommitInfo[]): Release[] {
-    // Analyze the commits and group them by tag.
-    // This is useful to generate multiple release logs in case there are
-    // multiple release tags.
-    let releaseMap: { [id: string]: Release } = {};
 
-    let currentTags = [UNRELEASED_TAG];
-    for (const commit of commits) {
-      if (commit.tags && commit.tags.length > 0) {
-        currentTags = commit.tags;
-      }
+    // TODO: tagのprefixかなにかで対象のタグを絞り込めるようにする。または構造をきっぱり変える。
+    // NOTE: 暫定ですべてnext-versionに含めるようにしている。
+    // // Analyze the commits and group them by tag.
+    // // This is useful to generate multiple release logs in case there are
+    // // multiple release tags.
+    // let releaseMap: { [id: string]: Release } = {};
 
-      // Tags referenced by commits are treated as a list. When grouping them,
-      // we split the commits referenced by multiple tags in their own group.
-      // This results in having one group of commits for each tag, even if
-      // the same commits are "duplicated" across the different tags
-      // referencing them.
-      for (const currentTag of currentTags) {
-        if (!releaseMap[currentTag]) {
-          let date = currentTag === UNRELEASED_TAG ? this.getToday() : commit.date;
-          releaseMap[currentTag] = { name: currentTag, date, commits: [] };
-        }
+    // let currentTags = [UNRELEASED_TAG];
+    // for (const commit of commits) {
+    //   if (commit.tags && commit.tags.length > 0) {
+    //     currentTags = commit.tags;
+    //   }
 
-        releaseMap[currentTag].commits.push(commit);
-      }
-    }
+    //   // Tags referenced by commits are treated as a list. When grouping them,
+    //   // we split the commits referenced by multiple tags in their own group.
+    //   // This results in having one group of commits for each tag, even if
+    //   // the same commits are "duplicated" across the different tags
+    //   // referencing them.
+    //   for (const currentTag of currentTags) {
+    //     if (!releaseMap[currentTag]) {
+    //       let date = currentTag === UNRELEASED_TAG ? this.getToday() : commit.date;
+    //       releaseMap[currentTag] = { name: currentTag, date, commits: [] };
+    //     }
 
-    return Object.keys(releaseMap).map(tag => releaseMap[tag]);
+    //     releaseMap[currentTag].commits.push(commit);
+    //   }
+    // }
+
+    // return Object.keys(releaseMap).map(tag => releaseMap[tag]);
+
+    return [{
+      name: UNRELEASED_TAG,
+      date: this.getToday(),
+      commits,
+    }]
   }
 
   private getToday() {
