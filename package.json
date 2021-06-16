@@ -66,11 +66,10 @@
   "changelog": {
     "repo": "persol-epdndo/lerna-changelog",
     "labels": {
-      "breaking": ":boom: Breaking Change",
-      "enhancement": ":rocket: Enhancement",
-      "bug": ":bug: Bug Fix",
-      "documentation": ":memo: Documentation",
-      "internal": ":house: Internal"
+      "feat": ":rocket: 新規機能/改修",
+      "bug": ":bug: 不具合修正",
+      "internal": ":wrench: 内部的な変更",
+      "chore": ":pencil: その他の変更"
     },
     "cacheDir": ".changelog"
   },

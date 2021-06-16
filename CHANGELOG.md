@@ -1,5 +1,26 @@
 # Changelog
 
+## release-prod-v1.0.3 (2021-06-15)
+
+#### :rocket: 新規機能/改修
+* [#3](https://github.com/persol-epdndo/lerna-changelog/pull/3) feat: PR内の本文に記載された脆弱性診断用のURL, APIがCHANGELOGの内容として出力されるように無理やり実装 ([@dekimasoon](https://github.com/dekimasoon))
+* [#1](https://github.com/persol-epdndo/lerna-changelog/pull/1) chore: fork先のリポジトリからPRを取得できるようにリポジトリ名を調整 ([@dekimasoon](https://github.com/dekimasoon))
+
+#### :bug: 不具合修正
+* [#1](https://github.com/persol-epdndo/lerna-changelog/pull/1) chore: fork先のリポジトリからPRを取得できるようにリポジトリ名を調整 ([@dekimasoon](https://github.com/dekimasoon))
+
+#### 脆弱診断対象
+
+##### URL
+* /managed/positions/${id}
+* /positions
+
+##### API
+* (Mutation) createUser
+* (Mutation) hogehoge
+* (Query) organizations
+* (Subscription) hugahuga
+
 ## v1.0.1 (2020-03-04)
 
 #### :bug: Bug Fix
